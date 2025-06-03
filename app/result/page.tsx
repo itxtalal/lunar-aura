@@ -1,6 +1,5 @@
 "use client";
 
-import { CelestialInfluences } from "@/components/celestial-influences";
 import { CelestialInfo } from "@/components/celestial-info";
 import { Header } from "@/components/header";
 import { MoonPhaseDisplay } from "@/components/moon-phase-display";
@@ -16,9 +15,11 @@ import {
 } from "@/lib/celestial-utils";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Share2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CelestialInfluences } from "@/components/celestial-influences";
+import { ShareButton } from "@/components/share-button";
 
 export default function ResultPage() {
   const searchParams = useSearchParams();
@@ -72,6 +73,15 @@ export default function ResultPage() {
     ? format(new Date(dateParam), "MMMM d, yyyy")
     : "";
 
+  // Calculate share URL
+  const shareUrl = dateParam
+    ? typeof window !== "undefined"
+      ? `${window.location.origin}/result?date=${dateParam}${
+          nameParam ? `&name=${encodeURIComponent(nameParam)}` : ""
+        }`
+      : ""
+    : "";
+
   return (
     <div className="container pt-32 pb-16 px-4">
       <motion.div
@@ -90,11 +100,21 @@ export default function ResultPage() {
         </h1>
         <p className="text-lg text-muted-foreground">
           {isLoading ? (
-            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-6 w-48 rounded-md" />
           ) : (
             `Birth Date: ${formattedDate}`
           )}
         </p>
+        {!isLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="mt-4 w-fit"
+          >
+            <ShareButton shareUrl={shareUrl} />
+          </motion.div>
+        )}
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -105,7 +125,7 @@ export default function ResultPage() {
         >
           {isLoading ? (
             <div
-              className="glass-morphism rounded-xl p-6 md:p-8 flex items-center justify-center\"
+              className="glass-morphism rounded-xl p-6 md:p-8 flex items-center justify-center"
               style={{ minHeight: "400px" }}
             >
               <div className="text-center">
@@ -176,10 +196,10 @@ export default function ResultPage() {
         >
           {isLoading ? (
             <div className="glass-morphism rounded-xl p-6 md:p-8">
-              <Skeleton className="h-8 w-48 mb-6" />
+              <Skeleton className="h-8 w-48 mb-6 rounded-md" />
               <div className="space-y-4">
                 {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="h-24 w-full" />
+                  <Skeleton key={i} className="h-24 w-full rounded-xl" />
                 ))}
               </div>
             </div>

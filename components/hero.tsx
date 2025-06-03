@@ -20,12 +20,10 @@ export function Hero() {
   };
 
   const handleSubmit = () => {
-    if (selectedDate) {
+    if (selectedDate && name.trim()) {
       const dateString = selectedDate.toISOString().split("T")[0];
       const queryParams = new URLSearchParams({ date: dateString });
-      if (name.trim()) {
-        queryParams.append("name", name.trim());
-      }
+      queryParams.append("name", name.trim());
       router.push(`/result?${queryParams.toString()}`);
     }
   };
@@ -73,7 +71,7 @@ export function Hero() {
               {!isDatePickerOpen ? (
                 <Button
                   onClick={() => setIsDatePickerOpen(true)}
-                  className="w-full bg-primary/20 hover:bg-primary/30 text-primary-foreground border border-primary/30 backdrop-blur-sm"
+                  className="w-full bg-primary/50 hover:bg-primary/30 text-primary-foreground border border-primary/30 backdrop-blur-sm"
                 >
                   {selectedDate
                     ? selectedDate.toLocaleDateString("en-US", {
@@ -94,7 +92,7 @@ export function Hero() {
 
               <Button
                 onClick={handleSubmit}
-                disabled={!selectedDate}
+                disabled={!selectedDate || !name.trim()}
                 className="w-full bg-primary hover:bg-primary/90"
               >
                 Find Your Lunar Phase

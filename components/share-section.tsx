@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { toPng } from "html-to-image";
 import { Check, Copy, Download } from "lucide-react";
 import { useRef, useState } from "react";
+import { ShareButton } from "@/components/share-button";
 
 interface ShareSectionProps {
   birthDate?: Date;
@@ -475,28 +476,15 @@ export function ShareSection({
             </div>
 
             <div className="space-y-3 max-w-sm mx-auto lg:max-w-none lg:mx-0">
-              <Button onClick={handleDownload} className="w-full">
+              <Button
+                onClick={handleDownload}
+                className="w-full bg-primary hover:bg-primary/90"
+              >
                 <Download className="mr-2 h-4 w-4" />
                 Download Image
               </Button>
 
-              <Button
-                onClick={handleCopyLink}
-                variant="outline"
-                className="w-full"
-              >
-                {copied ? (
-                  <>
-                    <Check className="mr-2 h-4 w-4" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="mr-2 h-4 w-4" />
-                    Copy Share Link
-                  </>
-                )}
-              </Button>
+              <ShareButton shareUrl={shareUrl} />
             </div>
 
             {/* Additional mobile spacing */}
