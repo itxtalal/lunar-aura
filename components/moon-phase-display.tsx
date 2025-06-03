@@ -16,7 +16,7 @@ interface MoonPhaseDisplayProps {
 
 export function MoonPhaseDisplay({
   moonPhaseData,
-  canvasStyles = "w-40 h-40 sm:w-48 sm:h-48 md:w-60 md:h-60 lg:w-80 lg:h-80", // Default responsive sizes
+  canvasStyles = "w-40 h-40 sm:w-48 sm:h-48 md:w-60 md:h-60 lg:w-80 lg:h-80",
 }: MoonPhaseDisplayProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -27,35 +27,42 @@ export function MoonPhaseDisplay({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Get device pixel ratio
+    // Get the actual rendered size of the canvas
+    const rect = canvas.getBoundingClientRect();
+    const displayWidth = rect.width;
+    const displayHeight = rect.height;
+    const displaySize = Math.min(displayWidth, displayHeight);
+
+    // Get device pixel ratio for sharp rendering
     const dpr = window.devicePixelRatio || 1;
 
-    // Set canvas dimensions based on rendered size
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    // Set the actual canvas size in memory (scaled up for retina displays)
+    canvas.width = displayWidth * dpr;
+    canvas.height = displayHeight * dpr;
 
-    // Scale the context to the device pixel ratio
+    // Scale the drawing context so everything draws at the correct size
     ctx.scale(dpr, dpr);
 
+    // Set the CSS size to the original size (this prevents the canvas from appearing scaled)
+    canvas.style.width = displayWidth + "px";
+    canvas.style.height = displayHeight + "px";
+
     // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, displayWidth, displayHeight);
 
     // Calculate moon phase
     const { phaseAngle } = moonPhaseData;
 
-    // Moon parameters - adjusted for padding and to fit within canvas
-    const centerX = canvas.width / (2 * dpr);
-    const centerY = canvas.height / (2 * dpr);
-    const buffer = 5; // Small buffer to keep drawing away from the edge
-    const maxRadius =
-      Math.min(canvas.width / (2 * dpr), canvas.height / (2 * dpr)) - buffer; // Maximum allowed radius
-    const baseRadius = maxRadius / 1.3; // Calculate base moon radius relative to max allowed radius
+    // Moon parameters - use display size for calculations
+    const centerX = displayWidth / 2;
+    const centerY = displayHeight / 2;
+    const padding = displaySize * 0.1; // 10% padding
+    const baseRadius = (displaySize - padding * 2) / 2;
 
     // Draw moon base (full circle)
     ctx.beginPath();
     ctx.arc(centerX, centerY, baseRadius, 0, Math.PI * 2);
-    ctx.fillStyle = "#e6e6e6"; // Base moon color
+    ctx.fillStyle = "#e6e6e6";
     ctx.fill();
 
     // Draw shadow based on moon phase
@@ -93,7 +100,7 @@ export function MoonPhaseDisplay({
       );
     }
 
-    ctx.fillStyle = "#1f2937"; // Shadow color
+    ctx.fillStyle = "#1f2937";
     ctx.fill();
 
     // Add subtle crater details
@@ -108,7 +115,7 @@ export function MoonPhaseDisplay({
       ctx.fill();
     };
 
-    // Draw some craters - adjusted positions and sizes relative to baseRadius
+    // Draw craters with positions relative to moon size
     const craters = [
       {
         x: centerX - baseRadius * 0.3,
@@ -136,23 +143,36 @@ export function MoonPhaseDisplay({
       drawCrater(crater.x, crater.y, crater.size);
     });
 
-    // Glow effect - adjusted radius based on calculated baseRadius
+    // Glow effect
     const gradient = ctx.createRadialGradient(
       centerX,
       centerY,
       baseRadius * 0.9,
       centerX,
       centerY,
-      baseRadius * 1.3
+      baseRadius * 1.2
     );
     gradient.addColorStop(0, "rgba(255, 255, 255, 0.3)");
     gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
 
     ctx.globalCompositeOperation = "source-over";
     ctx.beginPath();
-    ctx.arc(centerX, centerY, baseRadius * 1.3, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY, baseRadius * 1.2, 0, Math.PI * 2);
     ctx.fillStyle = gradient;
     ctx.fill();
+
+    // Add a resize observer to handle dynamic size changes
+    const resizeObserver = new ResizeObserver(() => {
+      // Re-trigger the effect when canvas size changes
+      const event = new Event("resize");
+      window.dispatchEvent(event);
+    });
+
+    resizeObserver.observe(canvas);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, [moonPhaseData]);
 
   if (!moonPhaseData) return null;
