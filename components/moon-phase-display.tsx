@@ -148,54 +148,13 @@ export function MoonPhaseDisplay({ moonPhaseData }: MoonPhaseDisplayProps) {
   if (!moonPhaseData) return null;
 
   return (
-    <div className="glass-morphism rounded-xl p-6 md:p-8 relative overflow-hidden">
-      <div className="absolute inset-0 aurora-gradient opacity-20"></div>
-      <div className="relative z-10">
-        <div className="flex flex-col items-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="moon-glow mb-6 flex justify-center items-center"
-          >
-            <canvas ref={canvasRef} className="w-[240px] h-[240px]" />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-center mb-4"
-          >
-            <h2 className="text-2xl font-serif font-bold mb-2">
-              {moonPhaseData.phase}
-            </h2>
-            <p className="text-muted-foreground">
-              {moonPhaseData.phaseDescription}
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="grid grid-cols-2 gap-4 w-full"
-          >
-            <div className="bg-background/30 backdrop-blur-sm rounded-lg p-4 text-center">
-              <p className="text-sm text-muted-foreground mb-1">Illumination</p>
-              <p className="text-xl font-medium">
-                {Math.round(moonPhaseData.illumination * 100)}%
-              </p>
-            </div>
-            <div className="bg-background/30 backdrop-blur-sm rounded-lg p-4 text-center">
-              <p className="text-sm text-muted-foreground mb-1">Lunar Age</p>
-              <p className="text-xl font-medium">
-                {Math.round((moonPhaseData.phaseAngle / 360) * 29.53)} days
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="moon-glow mb-6 flex justify-center items-center"
+    >
+      <canvas ref={canvasRef} className="w-[240px] h-[240px]" />
+    </motion.div>
   );
 }
