@@ -23,10 +23,11 @@ export function MoonPhaseDisplay({ moonPhaseData }: MoonPhaseDisplayProps) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set canvas dimensions
-    const size = 240;
-    canvas.width = size;
-    canvas.height = size;
+    // Set canvas dimensions based on rendered size
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    const size = Math.min(canvas.width, canvas.height);
 
     // Clear canvas
     ctx.clearRect(0, 0, size, size);
@@ -34,14 +35,16 @@ export function MoonPhaseDisplay({ moonPhaseData }: MoonPhaseDisplayProps) {
     // Calculate moon phase
     const { phaseAngle } = moonPhaseData;
 
-    // Moon parameters
+    // Moon parameters - adjusted for padding and glow
     const centerX = size / 2;
     const centerY = size / 2;
-    const radius = size / 2 - 10;
+    const glowPadding = 10; // Adjusted this value to make the moon bigger
+    const maxGlowRadius = size / 2 - glowPadding;
+    const baseRadius = maxGlowRadius / 1.3; // Calculate base moon radius based on desired max glow radius
 
     // Draw moon base (full circle)
     ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY, baseRadius, 0, Math.PI * 2);
     ctx.fillStyle = "#e6e6e6"; // Base moon color
     ctx.fill();
 
@@ -50,33 +53,33 @@ export function MoonPhaseDisplay({ moonPhaseData }: MoonPhaseDisplayProps) {
 
     if (phaseAngle < 180) {
       // Waxing moon (right side illuminated)
-      ctx.arc(centerX, centerY, radius, -Math.PI / 2, Math.PI / 2, true);
+      ctx.arc(centerX, centerY, baseRadius, -Math.PI / 2, Math.PI / 2, true);
 
       // Draw terminator curve
       const curveX =
-        centerX + radius * Math.cos(((phaseAngle - 90) * Math.PI) / 180);
+        centerX + baseRadius * Math.cos(((phaseAngle - 90) * Math.PI) / 180);
       ctx.bezierCurveTo(
         curveX,
-        centerY - radius,
+        centerY - baseRadius,
         curveX,
-        centerY + radius,
+        centerY + baseRadius,
         centerX,
-        centerY + radius
+        centerY + baseRadius
       );
     } else {
       // Waning moon (left side illuminated)
-      ctx.arc(centerX, centerY, radius, Math.PI / 2, -Math.PI / 2, true);
+      ctx.arc(centerX, centerY, baseRadius, Math.PI / 2, -Math.PI / 2, true);
 
       // Draw terminator curve
       const curveX =
-        centerX + radius * Math.cos(((phaseAngle - 270) * Math.PI) / 180);
+        centerX + baseRadius * Math.cos(((phaseAngle - 270) * Math.PI) / 180);
       ctx.bezierCurveTo(
         curveX,
-        centerY - radius,
+        centerY - baseRadius,
         curveX,
-        centerY + radius,
+        centerY + baseRadius,
         centerX,
-        centerY + radius
+        centerY + baseRadius
       );
     }
 
@@ -95,27 +98,27 @@ export function MoonPhaseDisplay({ moonPhaseData }: MoonPhaseDisplayProps) {
       ctx.fill();
     };
 
-    // Draw some craters
+    // Draw some craters - adjusted positions and sizes relative to baseRadius
     const craters = [
       {
-        x: centerX - radius * 0.3,
-        y: centerY - radius * 0.4,
-        size: radius * 0.12,
+        x: centerX - baseRadius * 0.3,
+        y: centerY - baseRadius * 0.4,
+        size: baseRadius * 0.12,
       },
       {
-        x: centerX + radius * 0.1,
-        y: centerY + radius * 0.2,
-        size: radius * 0.08,
+        x: centerX + baseRadius * 0.1,
+        y: centerY + baseRadius * 0.2,
+        size: baseRadius * 0.08,
       },
       {
-        x: centerX - radius * 0.2,
-        y: centerY + radius * 0.5,
-        size: radius * 0.1,
+        x: centerX - baseRadius * 0.2,
+        y: centerY + baseRadius * 0.5,
+        size: baseRadius * 0.1,
       },
       {
-        x: centerX + radius * 0.4,
-        y: centerY - radius * 0.1,
-        size: radius * 0.06,
+        x: centerX + baseRadius * 0.4,
+        y: centerY - baseRadius * 0.1,
+        size: baseRadius * 0.06,
       },
     ];
 
@@ -123,21 +126,21 @@ export function MoonPhaseDisplay({ moonPhaseData }: MoonPhaseDisplayProps) {
       drawCrater(crater.x, crater.y, crater.size);
     });
 
-    // Glow effect
+    // Glow effect - adjusted radius based on calculated baseRadius
     const gradient = ctx.createRadialGradient(
       centerX,
       centerY,
-      radius * 0.9,
+      baseRadius * 0.9,
       centerX,
       centerY,
-      radius * 1.3
+      baseRadius * 1.3
     );
     gradient.addColorStop(0, "rgba(255, 255, 255, 0.3)");
     gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
 
     ctx.globalCompositeOperation = "source-over";
     ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 1.3, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY, baseRadius * 1.3, 0, Math.PI * 2);
     ctx.fillStyle = gradient;
     ctx.fill();
   }, [moonPhaseData]);
@@ -153,7 +156,7 @@ export function MoonPhaseDisplay({ moonPhaseData }: MoonPhaseDisplayProps) {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="moon-glow mb-6"
+            className="moon-glow mb-6 flex justify-center items-center"
           >
             <canvas ref={canvasRef} className="w-[240px] h-[240px]" />
           </motion.div>

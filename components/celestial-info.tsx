@@ -143,69 +143,6 @@ export function CelestialInfo({ moonPhaseData }: CelestialInfoProps) {
               </div>
             </div>
           </motion.div>
-
-          <motion.div variants={item} className="mt-6">
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="zodiac" className="border-muted">
-                <AccordionTrigger className="text-md hover:no-underline hover:text-primary">
-                  <div className="flex items-center">
-                    <Stars className="mr-2 h-4 w-4" />
-                    Zodiac Influence
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {zodiacSign.description}
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="moonsign" className="border-muted">
-                <AccordionTrigger className="text-md hover:no-underline hover:text-primary">
-                  <div className="flex items-center">
-                    <Moon className="mr-2 h-4 w-4" />
-                    Moon Sign Influence
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {moonSign.description}
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="moonphase" className="border-muted">
-                <AccordionTrigger className="text-md hover:no-underline hover:text-primary">
-                  <div className="flex items-center">
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    Birth Moon Phase Meaning
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    Being born during a {moonPhaseData.phase.toLowerCase()} moon
-                    phase suggests
-                    {moonPhaseData.phase === "New Moon" &&
-                      " a natural affinity for new beginnings and fresh starts. You may possess a pioneering spirit and the ability to initiate projects with enthusiasm. Your intuitive creativity is heightened during new cycles."}
-                    {moonPhaseData.phase === "Waxing Crescent" &&
-                      " you're a naturally growth-oriented person with a gift for building momentum. You likely excel at nurturing ideas from their earliest stages and have a persistent, determined nature."}
-                    {moonPhaseData.phase === "First Quarter" &&
-                      " you have a natural ability to overcome obstacles and push through challenges. Your decisiveness and action-oriented nature helps you make progress when others might hesitate."}
-                    {moonPhaseData.phase === "Waxing Gibbous" &&
-                      " you possess a detail-oriented and perfectionistic nature. You excel at refining and improving existing structures and have strong analytical abilities."}
-                    {moonPhaseData.phase === "Full Moon" &&
-                      " you have heightened emotional awareness and intuitive abilities. You likely possess strong interpersonal skills and a natural charisma that draws others to you."}
-                    {moonPhaseData.phase === "Waning Gibbous" &&
-                      " you have natural teaching abilities and a gift for communication. You excel at sharing knowledge and helping others understand complex concepts."}
-                    {moonPhaseData.phase === "Last Quarter" &&
-                      " you possess strong critical thinking skills and the ability to release what no longer serves you. You're naturally adept at transitions and letting go."}
-                    {moonPhaseData.phase === "Waning Crescent" &&
-                      " you have a contemplative nature and deep spiritual insights. You're comfortable with endings and the quiet space before new beginnings."}
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </motion.div>
         </motion.div>
       </div>
     </div>

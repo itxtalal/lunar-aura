@@ -18,6 +18,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CelestialInfluences } from "@/components/celestial-influences";
 
 export default function ResultPage() {
   const searchParams = useSearchParams();
@@ -150,18 +151,29 @@ export default function ResultPage() {
           </div>
 
           {!isLoading && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-8"
-            >
-              <ShareSection
-                birthDate={dateParam ? new Date(dateParam) : undefined}
-                moonPhaseData={moonPhaseData}
-                name={nameParam || undefined}
-              />
-            </motion.div>
+            <>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="mt-8"
+              >
+                <CelestialInfluences moonPhaseData={moonPhaseData} />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                className="mt-8"
+              >
+                <ShareSection
+                  birthDate={dateParam ? new Date(dateParam) : undefined}
+                  moonPhaseData={moonPhaseData}
+                  name={nameParam || undefined}
+                />
+              </motion.div>
+            </>
           )}
         </div>
       </div>

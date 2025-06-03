@@ -6,29 +6,13 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { toPng } from "html-to-image";
-import { Check, Copy, Download, Facebook, Twitter } from "lucide-react";
+import { Check, Copy, Download, Twitter, Facebook } from "lucide-react";
 import { useRef, useState } from "react";
 
 interface ShareSectionProps {
   birthDate?: Date;
   moonPhaseData: any;
   name?: string;
-}
-
-function CharacteristicBadge({ text, color }: { text: string; color: string }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className={cn(
-        "px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm",
-        "border border-white/10 shadow-lg",
-        color
-      )}
-    >
-      {text}
-    </motion.div>
-  );
 }
 
 export function ShareSection({
@@ -107,152 +91,6 @@ export function ShareSection({
     window.open(facebookUrl, "_blank");
   };
 
-  const getCharacteristics = () => {
-    const characteristics = [];
-
-    // Add zodiac element characteristic
-    characteristics.push({
-      text: `${moonPhaseData.zodiacSign.element} Element`,
-      color:
-        moonPhaseData.zodiacSign.element.toLowerCase() === "fire"
-          ? "bg-red-500/20 text-red-200"
-          : moonPhaseData.zodiacSign.element.toLowerCase() === "earth"
-          ? "bg-emerald-500/20 text-emerald-200"
-          : moonPhaseData.zodiacSign.element.toLowerCase() === "air"
-          ? "bg-sky-500/20 text-sky-200"
-          : "bg-indigo-500/20 text-indigo-200",
-    });
-
-    // Add moon phase characteristic
-    const phaseTraits = {
-      "New Moon": [
-        {
-          text: "Pioneering Spirit",
-          color: "bg-purple-500/20 text-purple-200",
-        },
-        { text: "Fresh Starts", color: "bg-purple-500/20 text-purple-200" },
-        { text: "Creative", color: "bg-purple-500/20 text-purple-200" },
-      ],
-      "Waxing Crescent": [
-        { text: "Growth-Oriented", color: "bg-blue-500/20 text-blue-200" },
-        { text: "Determined", color: "bg-blue-500/20 text-blue-200" },
-        { text: "Nurturing", color: "bg-blue-500/20 text-blue-200" },
-      ],
-      "First Quarter": [
-        { text: "Action-Driven", color: "bg-green-500/20 text-green-200" },
-        { text: "Decisive", color: "bg-green-500/20 text-green-200" },
-        { text: "Resilient", color: "bg-green-500/20 text-green-200" },
-      ],
-      "Waxing Gibbous": [
-        { text: "Detail-Focused", color: "bg-yellow-500/20 text-yellow-200" },
-        { text: "Analytical", color: "bg-yellow-500/20 text-yellow-200" },
-        { text: "Perfectionist", color: "bg-yellow-500/20 text-yellow-200" },
-      ],
-      "Full Moon": [
-        { text: "Intuitive", color: "bg-pink-500/20 text-pink-200" },
-        { text: "Emotionally Aware", color: "bg-pink-500/20 text-pink-200" },
-        { text: "Charismatic", color: "bg-pink-500/20 text-pink-200" },
-      ],
-      "Waning Gibbous": [
-        {
-          text: "Knowledge-Sharing",
-          color: "bg-orange-500/20 text-orange-200",
-        },
-        { text: "Communicative", color: "bg-orange-500/20 text-orange-200" },
-        { text: "Teacher", color: "bg-orange-500/20 text-orange-200" },
-      ],
-      "Last Quarter": [
-        { text: "Transitional", color: "bg-red-500/20 text-red-200" },
-        { text: "Critical Thinker", color: "bg-red-500/20 text-red-200" },
-        { text: "Adaptable", color: "bg-red-500/20 text-red-200" },
-      ],
-      "Waning Crescent": [
-        { text: "Contemplative", color: "bg-indigo-500/20 text-indigo-200" },
-        { text: "Spiritual", color: "bg-indigo-500/20 text-indigo-200" },
-        { text: "Reflective", color: "bg-indigo-500/20 text-indigo-200" },
-      ],
-    };
-
-    // Add all moon phase traits
-    characteristics.push(
-      ...phaseTraits[moonPhaseData.phase as keyof typeof phaseTraits]
-    );
-
-    // Add zodiac sign specific traits
-    const zodiacTraits = {
-      Aries: [
-        { text: "Courageous", color: "bg-red-500/20 text-red-200" },
-        { text: "Energetic", color: "bg-red-500/20 text-red-200" },
-      ],
-      Taurus: [
-        { text: "Reliable", color: "bg-emerald-500/20 text-emerald-200" },
-        { text: "Patient", color: "bg-emerald-500/20 text-emerald-200" },
-      ],
-      Gemini: [
-        { text: "Adaptable", color: "bg-sky-500/20 text-sky-200" },
-        { text: "Curious", color: "bg-sky-500/20 text-sky-200" },
-      ],
-      Cancer: [
-        { text: "Nurturing", color: "bg-indigo-500/20 text-indigo-200" },
-        { text: "Intuitive", color: "bg-indigo-500/20 text-indigo-200" },
-      ],
-      Leo: [
-        { text: "Confident", color: "bg-red-500/20 text-red-200" },
-        { text: "Creative", color: "bg-red-500/20 text-red-200" },
-      ],
-      Virgo: [
-        { text: "Analytical", color: "bg-emerald-500/20 text-emerald-200" },
-        { text: "Practical", color: "bg-emerald-500/20 text-emerald-200" },
-      ],
-      Libra: [
-        { text: "Diplomatic", color: "bg-sky-500/20 text-sky-200" },
-        { text: "Harmonious", color: "bg-sky-500/20 text-sky-200" },
-      ],
-      Scorpio: [
-        { text: "Passionate", color: "bg-indigo-500/20 text-indigo-200" },
-        { text: "Determined", color: "bg-indigo-500/20 text-indigo-200" },
-      ],
-      Sagittarius: [
-        { text: "Adventurous", color: "bg-red-500/20 text-red-200" },
-        { text: "Optimistic", color: "bg-red-500/20 text-red-200" },
-      ],
-      Capricorn: [
-        { text: "Ambitious", color: "bg-emerald-500/20 text-emerald-200" },
-        { text: "Disciplined", color: "bg-emerald-500/20 text-emerald-200" },
-      ],
-      Aquarius: [
-        { text: "Innovative", color: "bg-sky-500/20 text-sky-200" },
-        { text: "Independent", color: "bg-sky-500/20 text-sky-200" },
-      ],
-      Pisces: [
-        { text: "Compassionate", color: "bg-indigo-500/20 text-indigo-200" },
-        { text: "Imaginative", color: "bg-indigo-500/20 text-indigo-200" },
-      ],
-    };
-
-    // Add zodiac sign traits
-    characteristics.push(
-      ...zodiacTraits[
-        moonPhaseData.zodiacSign.sign as keyof typeof zodiacTraits
-      ]
-    );
-
-    // Add moon sign element characteristic
-    characteristics.push({
-      text: `${moonPhaseData.moonSign.element} Moon`,
-      color:
-        moonPhaseData.moonSign.element.toLowerCase() === "fire"
-          ? "bg-red-500/20 text-red-200"
-          : moonPhaseData.moonSign.element.toLowerCase() === "earth"
-          ? "bg-emerald-500/20 text-emerald-200"
-          : moonPhaseData.moonSign.element.toLowerCase() === "air"
-          ? "bg-sky-500/20 text-sky-200"
-          : "bg-indigo-500/20 text-indigo-200",
-    });
-
-    return characteristics;
-  };
-
   return (
     <div className="glass-morphism rounded-xl p-6 md:p-8 relative overflow-hidden">
       <div className="absolute inset-0 aurora-gradient opacity-20"></div>
@@ -318,7 +156,8 @@ export function ShareSection({
                 </p>
               </div>
 
-              <div className="mt-6">
+              {/* Characteristics are now in CelestialInfluences */}
+              {/* <div className="mt-6">
                 <div className="grid grid-cols-2 gap-2">
                   {getCharacteristics().map((char, index) => (
                     <CharacteristicBadge
@@ -328,7 +167,7 @@ export function ShareSection({
                     />
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="mt-4 text-center">

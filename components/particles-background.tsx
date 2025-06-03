@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback } from "react";
-import Particles from "react-particles";
-import type { Engine } from "tsparticles-engine";
-import { loadSlim } from "tsparticles-slim";
+import Particles from "@tsparticles/react";
+import type { Engine } from "@tsparticles/engine";
+import { loadSlim } from "@tsparticles/slim";
 
 export function ParticlesBackground() {
   const particlesInit = useCallback(async (engine: Engine) => {
@@ -22,12 +22,12 @@ export function ParticlesBackground() {
               enable: true,
               mode: "grab",
             },
-            resize: true,
+            // resize: true,
           },
           modes: {
             grab: {
               distance: 140,
-              line_linked: {
+              links: {
                 opacity: 0.5,
               },
             },
