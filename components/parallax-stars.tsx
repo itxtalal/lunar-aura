@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export function ParallaxStars() {
   const starsRef = useRef<HTMLDivElement>(null);
@@ -16,24 +16,24 @@ export function ParallaxStars() {
     for (let i = 0; i < starCount; i++) {
       const star = document.createElement("div");
       star.className = "star";
-      
+
       // Random size between 1px and 3px
       const size = Math.random() * 2 + 1;
       star.style.width = `${size}px`;
       star.style.height = `${size}px`;
-      
+
       // Random position
       star.style.left = `${Math.random() * 100}%`;
       star.style.top = `${Math.random() * 100}%`;
-      
+
       // Random opacity
       const opacity = Math.random() * 0.7 + 0.3;
       star.style.setProperty("--opacity", opacity.toString());
-      
+
       // Random twinkle duration
       const duration = `${Math.random() * 3 + 2}s`;
       star.style.setProperty("--duration", duration);
-      
+
       fragment.appendChild(star);
     }
 
@@ -43,7 +43,7 @@ export function ParallaxStars() {
     const handleMouseMove = (e: MouseEvent) => {
       const x = e.clientX / window.innerWidth;
       const y = e.clientY / window.innerHeight;
-      
+
       stars.style.transform = `translate(${x * -20}px, ${y * -20}px)`;
     };
 

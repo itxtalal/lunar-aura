@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { BirthDatePicker } from "@/components/birth-date-picker";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function Hero() {
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [name, setName] = useState("");
 
   const handleDateSelected = (date: Date) => {
     setSelectedDate(date);
@@ -20,7 +22,11 @@ export function Hero() {
   const handleSubmit = () => {
     if (selectedDate) {
       const dateString = selectedDate.toISOString().split("T")[0];
-      router.push(`/result?date=${dateString}`);
+      const queryParams = new URLSearchParams({ date: dateString });
+      if (name.trim()) {
+        queryParams.append("name", name.trim());
+      }
+      router.push(`/result?${queryParams.toString()}`);
     }
   };
 
@@ -52,40 +58,49 @@ export function Hero() {
               When were you born?
             </h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Select your birth date to reveal the moon phase and celestial
-              alignments of your arrival
+              Enter your name and birth date to reveal your lunar destiny
             </p>
 
-            {!isDatePickerOpen ? (
-              <Button
-                onClick={() => setIsDatePickerOpen(true)}
-                className="w-full mb-4 bg-primary/20 hover:bg-primary/30 text-primary-foreground border border-primary/30 backdrop-blur-sm"
-              >
-                {selectedDate
-                  ? selectedDate.toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })
-                  : "Choose Your Birth Date"}
-              </Button>
-            ) : (
-              <div className="mb-4">
-                <BirthDatePicker
-                  onDateSelected={handleDateSelected}
-                  onClose={() => setIsDatePickerOpen(false)}
-                />
-              </div>
-            )}
+            <div className="space-y-4">
+              <Input
+                type="text"
+                placeholder="Your Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-background/40 border-primary/30"
+              />
 
-            <Button
-              onClick={handleSubmit}
-              disabled={!selectedDate}
-              className="w-full bg-primary hover:bg-primary/90"
-            >
-              Find Your Lunar Phase
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+              {!isDatePickerOpen ? (
+                <Button
+                  onClick={() => setIsDatePickerOpen(true)}
+                  className="w-full bg-primary/20 hover:bg-primary/30 text-primary-foreground border border-primary/30 backdrop-blur-sm"
+                >
+                  {selectedDate
+                    ? selectedDate.toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                    : "Choose Your Birth Date"}
+                </Button>
+              ) : (
+                <div>
+                  <BirthDatePicker
+                    onDateSelected={handleDateSelected}
+                    onClose={() => setIsDatePickerOpen(false)}
+                  />
+                </div>
+              )}
+
+              <Button
+                onClick={handleSubmit}
+                disabled={!selectedDate}
+                className="w-full bg-primary hover:bg-primary/90"
+              >
+                Find Your Lunar Phase
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </motion.div>
 

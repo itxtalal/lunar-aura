@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Moon, Sun, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { Menu, Moon, Sun, X } from "lucide-react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function Header() {
   const { theme, setTheme } = useTheme();

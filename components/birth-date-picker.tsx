@@ -1,9 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Calendar } from "@/components/ui/calendar";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -12,6 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { motion } from "framer-motion";
+import { X } from "lucide-react";
+import { useState } from "react";
 
 interface BirthDatePickerProps {
   onDateSelected: (date: Date) => void;
@@ -47,9 +46,13 @@ export function BirthDatePicker({
   };
 
   const handleDateSelect = (date: Date | undefined) => {
-    setSelectedDate(date);
     if (date) {
-      onDateSelected(date);
+      // Create a new date with UTC midnight to avoid timezone issues
+      const utcDate = new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+      );
+      setSelectedDate(utcDate);
+      onDateSelected(utcDate);
     }
   };
 
@@ -128,9 +131,9 @@ export function BirthDatePicker({
             currentDate > today || currentDate < hundred_years_ago;
           const isSelected =
             selectedDate &&
-            currentDate.getDate() === selectedDate.getDate() &&
-            currentDate.getMonth() === selectedDate.getMonth() &&
-            currentDate.getFullYear() === selectedDate.getFullYear();
+            currentDate.getDate() === selectedDate.getUTCDate() &&
+            currentDate.getMonth() === selectedDate.getUTCMonth() &&
+            currentDate.getFullYear() === selectedDate.getUTCFullYear();
 
           return (
             <button

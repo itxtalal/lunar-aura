@@ -1,19 +1,41 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Share2, Download, Copy, Check, Twitter, Facebook } from "lucide-react";
-import { format } from "date-fns";
-import { toPng } from "html-to-image";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { motion } from "framer-motion";
+import { toPng } from "html-to-image";
+import { Check, Copy, Download, Facebook, Twitter } from "lucide-react";
+import { useRef, useState } from "react";
 
 interface ShareSectionProps {
   birthDate?: Date;
   moonPhaseData: any;
+  name?: string;
 }
 
-export function ShareSection({ birthDate, moonPhaseData }: ShareSectionProps) {
+function CharacteristicBadge({ text, color }: { text: string; color: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className={cn(
+        "px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm",
+        "border border-white/10 shadow-lg",
+        color
+      )}
+    >
+      {text}
+    </motion.div>
+  );
+}
+
+export function ShareSection({
+  birthDate,
+  moonPhaseData,
+  name,
+}: ShareSectionProps) {
   const { toast } = useToast();
   const cardRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
@@ -21,11 +43,17 @@ export function ShareSection({ birthDate, moonPhaseData }: ShareSectionProps) {
   if (!birthDate || !moonPhaseData) return null;
 
   const formattedDate = format(birthDate, "MMMM d, yyyy");
-  const shareUrl = typeof window !== "undefined" 
-    ? `${window.location.origin}/result?date=${format(birthDate, "yyyy-MM-dd")}`
-    : "";
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/result?date=${format(
+          birthDate,
+          "yyyy-MM-dd"
+        )}${name ? `&name=${encodeURIComponent(name)}` : ""}`
+      : "";
 
-  const shareText = `I was born during a ${moonPhaseData.phase} on ${formattedDate}. Discover your birth moon phase with LunarAura!`;
+  const shareText = `${name ? `${name} was` : "I was"} born during a ${
+    moonPhaseData.phase
+  } on ${formattedDate}. Discover your birth moon phase with LunarAura!`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl);
@@ -39,18 +67,18 @@ export function ShareSection({ birthDate, moonPhaseData }: ShareSectionProps) {
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
-    
+
     try {
-      const dataUrl = await toPng(cardRef.current, { 
+      const dataUrl = await toPng(cardRef.current, {
         quality: 0.95,
-        backgroundColor: "#0f172a" 
+        backgroundColor: "#0f172a",
       });
-      
+
       const link = document.createElement("a");
       link.download = `lunar-aura-${format(birthDate, "yyyy-MM-dd")}.png`;
       link.href = dataUrl;
       link.click();
-      
+
       toast({
         title: "Image downloaded!",
         description: "Your lunar card has been saved",
@@ -66,13 +94,163 @@ export function ShareSection({ birthDate, moonPhaseData }: ShareSectionProps) {
   };
 
   const handleShareTwitter = () => {
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      shareText
+    )}&url=${encodeURIComponent(shareUrl)}`;
     window.open(twitterUrl, "_blank");
   };
 
   const handleShareFacebook = () => {
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      shareUrl
+    )}`;
     window.open(facebookUrl, "_blank");
+  };
+
+  const getCharacteristics = () => {
+    const characteristics = [];
+
+    // Add zodiac element characteristic
+    characteristics.push({
+      text: `${moonPhaseData.zodiacSign.element} Element`,
+      color:
+        moonPhaseData.zodiacSign.element.toLowerCase() === "fire"
+          ? "bg-red-500/20 text-red-200"
+          : moonPhaseData.zodiacSign.element.toLowerCase() === "earth"
+          ? "bg-emerald-500/20 text-emerald-200"
+          : moonPhaseData.zodiacSign.element.toLowerCase() === "air"
+          ? "bg-sky-500/20 text-sky-200"
+          : "bg-indigo-500/20 text-indigo-200",
+    });
+
+    // Add moon phase characteristic
+    const phaseTraits = {
+      "New Moon": [
+        {
+          text: "Pioneering Spirit",
+          color: "bg-purple-500/20 text-purple-200",
+        },
+        { text: "Fresh Starts", color: "bg-purple-500/20 text-purple-200" },
+        { text: "Creative", color: "bg-purple-500/20 text-purple-200" },
+      ],
+      "Waxing Crescent": [
+        { text: "Growth-Oriented", color: "bg-blue-500/20 text-blue-200" },
+        { text: "Determined", color: "bg-blue-500/20 text-blue-200" },
+        { text: "Nurturing", color: "bg-blue-500/20 text-blue-200" },
+      ],
+      "First Quarter": [
+        { text: "Action-Driven", color: "bg-green-500/20 text-green-200" },
+        { text: "Decisive", color: "bg-green-500/20 text-green-200" },
+        { text: "Resilient", color: "bg-green-500/20 text-green-200" },
+      ],
+      "Waxing Gibbous": [
+        { text: "Detail-Focused", color: "bg-yellow-500/20 text-yellow-200" },
+        { text: "Analytical", color: "bg-yellow-500/20 text-yellow-200" },
+        { text: "Perfectionist", color: "bg-yellow-500/20 text-yellow-200" },
+      ],
+      "Full Moon": [
+        { text: "Intuitive", color: "bg-pink-500/20 text-pink-200" },
+        { text: "Emotionally Aware", color: "bg-pink-500/20 text-pink-200" },
+        { text: "Charismatic", color: "bg-pink-500/20 text-pink-200" },
+      ],
+      "Waning Gibbous": [
+        {
+          text: "Knowledge-Sharing",
+          color: "bg-orange-500/20 text-orange-200",
+        },
+        { text: "Communicative", color: "bg-orange-500/20 text-orange-200" },
+        { text: "Teacher", color: "bg-orange-500/20 text-orange-200" },
+      ],
+      "Last Quarter": [
+        { text: "Transitional", color: "bg-red-500/20 text-red-200" },
+        { text: "Critical Thinker", color: "bg-red-500/20 text-red-200" },
+        { text: "Adaptable", color: "bg-red-500/20 text-red-200" },
+      ],
+      "Waning Crescent": [
+        { text: "Contemplative", color: "bg-indigo-500/20 text-indigo-200" },
+        { text: "Spiritual", color: "bg-indigo-500/20 text-indigo-200" },
+        { text: "Reflective", color: "bg-indigo-500/20 text-indigo-200" },
+      ],
+    };
+
+    // Add all moon phase traits
+    characteristics.push(
+      ...phaseTraits[moonPhaseData.phase as keyof typeof phaseTraits]
+    );
+
+    // Add zodiac sign specific traits
+    const zodiacTraits = {
+      Aries: [
+        { text: "Courageous", color: "bg-red-500/20 text-red-200" },
+        { text: "Energetic", color: "bg-red-500/20 text-red-200" },
+      ],
+      Taurus: [
+        { text: "Reliable", color: "bg-emerald-500/20 text-emerald-200" },
+        { text: "Patient", color: "bg-emerald-500/20 text-emerald-200" },
+      ],
+      Gemini: [
+        { text: "Adaptable", color: "bg-sky-500/20 text-sky-200" },
+        { text: "Curious", color: "bg-sky-500/20 text-sky-200" },
+      ],
+      Cancer: [
+        { text: "Nurturing", color: "bg-indigo-500/20 text-indigo-200" },
+        { text: "Intuitive", color: "bg-indigo-500/20 text-indigo-200" },
+      ],
+      Leo: [
+        { text: "Confident", color: "bg-red-500/20 text-red-200" },
+        { text: "Creative", color: "bg-red-500/20 text-red-200" },
+      ],
+      Virgo: [
+        { text: "Analytical", color: "bg-emerald-500/20 text-emerald-200" },
+        { text: "Practical", color: "bg-emerald-500/20 text-emerald-200" },
+      ],
+      Libra: [
+        { text: "Diplomatic", color: "bg-sky-500/20 text-sky-200" },
+        { text: "Harmonious", color: "bg-sky-500/20 text-sky-200" },
+      ],
+      Scorpio: [
+        { text: "Passionate", color: "bg-indigo-500/20 text-indigo-200" },
+        { text: "Determined", color: "bg-indigo-500/20 text-indigo-200" },
+      ],
+      Sagittarius: [
+        { text: "Adventurous", color: "bg-red-500/20 text-red-200" },
+        { text: "Optimistic", color: "bg-red-500/20 text-red-200" },
+      ],
+      Capricorn: [
+        { text: "Ambitious", color: "bg-emerald-500/20 text-emerald-200" },
+        { text: "Disciplined", color: "bg-emerald-500/20 text-emerald-200" },
+      ],
+      Aquarius: [
+        { text: "Innovative", color: "bg-sky-500/20 text-sky-200" },
+        { text: "Independent", color: "bg-sky-500/20 text-sky-200" },
+      ],
+      Pisces: [
+        { text: "Compassionate", color: "bg-indigo-500/20 text-indigo-200" },
+        { text: "Imaginative", color: "bg-indigo-500/20 text-indigo-200" },
+      ],
+    };
+
+    // Add zodiac sign traits
+    characteristics.push(
+      ...zodiacTraits[
+        moonPhaseData.zodiacSign.sign as keyof typeof zodiacTraits
+      ]
+    );
+
+    // Add moon sign element characteristic
+    characteristics.push({
+      text: `${moonPhaseData.moonSign.element} Moon`,
+      color:
+        moonPhaseData.moonSign.element.toLowerCase() === "fire"
+          ? "bg-red-500/20 text-red-200"
+          : moonPhaseData.moonSign.element.toLowerCase() === "earth"
+          ? "bg-emerald-500/20 text-emerald-200"
+          : moonPhaseData.moonSign.element.toLowerCase() === "air"
+          ? "bg-sky-500/20 text-sky-200"
+          : "bg-indigo-500/20 text-indigo-200",
+    });
+
+    return characteristics;
   };
 
   return (
@@ -84,22 +262,38 @@ export function ShareSection({ birthDate, moonPhaseData }: ShareSectionProps) {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div 
-            ref={cardRef} 
+          <div
+            ref={cardRef}
             className="glass-morphism rounded-xl p-6 aspect-[4/5] flex flex-col justify-between relative overflow-hidden"
           >
             <div className="absolute inset-0 aurora-gradient opacity-30"></div>
             <div className="relative z-10">
               <div className="text-center mb-6">
-                <h3 className="text-lg font-serif font-bold text-primary">LunarAura</h3>
-                <p className="text-sm text-muted-foreground">Birth Moon Reading</p>
+                <h3 className="text-lg font-serif font-bold text-primary">
+                  LunarAura
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Birth Moon Reading
+                </p>
               </div>
+
+              {name && (
+                <div className="text-center mb-4">
+                  <h4 className="text-xl font-serif font-bold text-primary/90">
+                    {name}
+                  </h4>
+                </div>
+              )}
 
               <div className="flex flex-col items-center mb-6">
                 <div className="w-24 h-24 rounded-full bg-background/40 flex items-center justify-center mb-4">
-                  <span className="text-4xl">{moonPhaseData.zodiacSign.symbol}</span>
+                  <span className="text-4xl">
+                    {moonPhaseData.zodiacSign.symbol}
+                  </span>
                 </div>
-                <h3 className="text-xl font-serif font-bold">{moonPhaseData.phase}</h3>
+                <h3 className="text-xl font-serif font-bold">
+                  {moonPhaseData.phase}
+                </h3>
                 <p className="text-muted-foreground text-sm">
                   {Math.round(moonPhaseData.illumination * 100)}% Illumination
                 </p>
@@ -108,16 +302,32 @@ export function ShareSection({ birthDate, moonPhaseData }: ShareSectionProps) {
               <div className="text-center space-y-2">
                 <p className="text-sm">
                   <span className="text-muted-foreground">Sun Sign:</span>{" "}
-                  <span className="font-medium">{moonPhaseData.zodiacSign.sign}</span>
+                  <span className="font-medium">
+                    {moonPhaseData.zodiacSign.sign}
+                  </span>
                 </p>
                 <p className="text-sm">
                   <span className="text-muted-foreground">Moon Sign:</span>{" "}
-                  <span className="font-medium">{moonPhaseData.moonSign.sign}</span>
+                  <span className="font-medium">
+                    {moonPhaseData.moonSign.sign}
+                  </span>
                 </p>
                 <p className="text-sm">
                   <span className="text-muted-foreground">Birth Date:</span>{" "}
                   <span className="font-medium">{formattedDate}</span>
                 </p>
+              </div>
+
+              <div className="mt-6">
+                <div className="grid grid-cols-2 gap-2">
+                  {getCharacteristics().map((char, index) => (
+                    <CharacteristicBadge
+                      key={index}
+                      text={char.text}
+                      color={char.color}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -130,7 +340,9 @@ export function ShareSection({ birthDate, moonPhaseData }: ShareSectionProps) {
 
           <div className="flex flex-col justify-center space-y-4">
             <div>
-              <h3 className="text-lg font-medium mb-2">Share Your Lunar Profile</h3>
+              <h3 className="text-lg font-medium mb-2">
+                Share Your Lunar Profile
+              </h3>
               <p className="text-sm text-muted-foreground mb-4">
                 Download your personalized lunar card or share it with friends.
               </p>
@@ -144,7 +356,7 @@ export function ShareSection({ birthDate, moonPhaseData }: ShareSectionProps) {
                 <Download className="mr-2 h-4 w-4" />
                 Download Image
               </Button>
-              
+
               <Button
                 onClick={handleCopyLink}
                 variant="outline"
@@ -162,7 +374,7 @@ export function ShareSection({ birthDate, moonPhaseData }: ShareSectionProps) {
                   </>
                 )}
               </Button>
-              
+
               <div className="flex gap-3">
                 <Button
                   onClick={handleShareTwitter}

@@ -1,25 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { format } from "date-fns";
+import { CelestialInfo } from "@/components/celestial-info";
 import { Header } from "@/components/header";
+import { MoonPhaseDisplay } from "@/components/moon-phase-display";
 import { ParallaxStars } from "@/components/parallax-stars";
 import { ParticlesBackground } from "@/components/particles-background";
-import { MoonPhaseDisplay } from "@/components/moon-phase-display";
-import { CelestialInfo } from "@/components/celestial-info";
 import { ShareSection } from "@/components/share-section";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { getMoonPhase, getZodiacSign, getMoonSign } from "@/lib/celestial-utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  getMoonPhase,
+  getMoonSign,
+  getZodiacSign,
+} from "@/lib/celestial-utils";
+import { format } from "date-fns";
+import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ResultPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const dateParam = searchParams.get("date");
+  const nameParam = searchParams.get("name");
   const [isLoading, setIsLoading] = useState(true);
   const [moonPhaseData, setMoonPhaseData] = useState<any>(null);
 
@@ -33,15 +37,15 @@ export default function ResultPage() {
       try {
         setIsLoading(true);
         // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise((resolve) => setTimeout(resolve, 1500));
 
         const birthDate = new Date(dateParam);
-        
+
         // Calculate moon phase and other celestial data
         const moonPhase = getMoonPhase(birthDate);
         const zodiacSign = getZodiacSign(birthDate);
         const moonSign = getMoonSign(birthDate);
-        
+
         setMoonPhaseData({
           date: birthDate,
           phase: moonPhase.phase,
@@ -63,7 +67,7 @@ export default function ResultPage() {
     fetchData();
   }, [dateParam, router]);
 
-  const formattedDate = dateParam 
+  const formattedDate = dateParam
     ? format(new Date(dateParam), "MMMM d, yyyy")
     : "";
 
@@ -73,7 +77,7 @@ export default function ResultPage() {
       <ParticlesBackground />
       <div className="relative z-10">
         <Header />
-        
+
         <div className="container pt-32 pb-16 px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -89,9 +93,9 @@ export default function ResultPage() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
-            
+
             <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2">
-              Your Lunar Birth Chart
+              {nameParam ? `${nameParam}'s` : "Your"} Lunar Birth Chart
             </h1>
             <p className="text-lg text-muted-foreground">
               {isLoading ? (
@@ -109,10 +113,15 @@ export default function ResultPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               {isLoading ? (
-                <div className="glass-morphism rounded-xl p-6 md:p-8 flex items-center justify-center\" style={{ minHeight: "400px" }}>
+                <div
+                  className="glass-morphism rounded-xl p-6 md:p-8 flex items-center justify-center\"
+                  style={{ minHeight: "400px" }}
+                >
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Calculating lunar position...</p>
+                    <p className="text-muted-foreground">
+                      Calculating lunar position...
+                    </p>
                   </div>
                 </div>
               ) : (
@@ -147,7 +156,11 @@ export default function ResultPage() {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="mt-8"
             >
-              <ShareSection birthDate={dateParam ? new Date(dateParam) : undefined} moonPhaseData={moonPhaseData} />
+              <ShareSection
+                birthDate={dateParam ? new Date(dateParam) : undefined}
+                moonPhaseData={moonPhaseData}
+                name={nameParam || undefined}
+              />
             </motion.div>
           )}
         </div>
