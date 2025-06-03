@@ -1,5 +1,6 @@
 "use client";
 
+import { CelestialInfluences } from "@/components/celestial-influences";
 import { CelestialInfo } from "@/components/celestial-info";
 import { Header } from "@/components/header";
 import { MoonPhaseDisplay } from "@/components/moon-phase-display";
@@ -18,7 +19,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CelestialInfluences } from "@/components/celestial-influences";
 
 export default function ResultPage() {
   const searchParams = useSearchParams();
@@ -73,161 +73,147 @@ export default function ResultPage() {
     : "";
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      <ParallaxStars />
-      <ParticlesBackground />
-      <div className="relative z-10">
-        <Header />
+    <div className="container pt-32 pb-16 px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-8"
+      >
+        <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
 
-        <div className="container pt-32 pb-16 px-4">
+        <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2">
+          {nameParam ? `${nameParam}'s` : "Your"} Lunar Birth Chart
+        </h1>
+        <p className="text-lg text-muted-foreground">
+          {isLoading ? (
+            <Skeleton className="h-6 w-48" />
+          ) : (
+            `Birth Date: ${formattedDate}`
+          )}
+        </p>
+      </motion.div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          {isLoading ? (
+            <div
+              className="glass-morphism rounded-xl p-6 md:p-8 flex items-center justify-center\"
+              style={{ minHeight: "400px" }}
+            >
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-muted-foreground">
+                  Calculating lunar position...
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="glass-morphism rounded-xl p-6 md:p-8 relative overflow-hidden">
+              <div className="absolute inset-0 aurora-gradient opacity-20"></div>
+              <div className="relative z-10">
+                <div className="flex flex-col items-center">
+                  <MoonPhaseDisplay
+                    moonPhaseData={moonPhaseData}
+                    canvasStyles="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80"
+                  />
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                    className="text-center mb-4"
+                  >
+                    <h2 className="text-2xl font-serif font-bold mb-2">
+                      {moonPhaseData.phase}
+                    </h2>
+                    <p className="text-muted-foreground">
+                      {moonPhaseData.phaseDescription}
+                    </p>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    className="grid grid-cols-2 gap-4 w-full"
+                  >
+                    <div className="bg-background/30 backdrop-blur-sm rounded-lg p-4 text-center">
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Illumination
+                      </p>
+                      <p className="text-xl font-medium">
+                        {Math.round(moonPhaseData.illumination * 100)}%
+                      </p>
+                    </div>
+                    <div className="bg-background/30 backdrop-blur-sm rounded-lg p-4 text-center">
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Lunar Age
+                      </p>
+                      <p className="text-xl font-medium">
+                        {Math.round((moonPhaseData.phaseAngle / 360) * 29.53)}{" "}
+                        days
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          )}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          {isLoading ? (
+            <div className="glass-morphism rounded-xl p-6 md:p-8">
+              <Skeleton className="h-8 w-48 mb-6" />
+              <div className="space-y-4">
+                {[...Array(5)].map((_, i) => (
+                  <Skeleton key={i} className="h-24 w-full" />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <CelestialInfo moonPhaseData={moonPhaseData} />
+          )}
+        </motion.div>
+      </div>
+
+      {!isLoading && (
+        <>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8"
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="mt-8"
           >
-            <Button
-              variant="ghost"
-              onClick={() => router.back()}
-              className="mb-4"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back
-            </Button>
-
-            <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2">
-              {nameParam ? `${nameParam}'s` : "Your"} Lunar Birth Chart
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              {isLoading ? (
-                <Skeleton className="h-6 w-48" />
-              ) : (
-                `Birth Date: ${formattedDate}`
-              )}
-            </p>
+            <CelestialInfluences moonPhaseData={moonPhaseData} />
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              {isLoading ? (
-                <div
-                  className="glass-morphism rounded-xl p-6 md:p-8 flex items-center justify-center\"
-                  style={{ minHeight: "400px" }}
-                >
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">
-                      Calculating lunar position...
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="glass-morphism rounded-xl p-6 md:p-8 relative overflow-hidden">
-                  <div className="absolute inset-0 aurora-gradient opacity-20"></div>
-                  <div className="relative z-10">
-                    <div className="flex flex-col items-center">
-                      <MoonPhaseDisplay
-                        moonPhaseData={moonPhaseData}
-                        canvasStyles="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80"
-                      />
-
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.4 }}
-                        className="text-center mb-4"
-                      >
-                        <h2 className="text-2xl font-serif font-bold mb-2">
-                          {moonPhaseData.phase}
-                        </h2>
-                        <p className="text-muted-foreground">
-                          {moonPhaseData.phaseDescription}
-                        </p>
-                      </motion.div>
-
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.6 }}
-                        className="grid grid-cols-2 gap-4 w-full"
-                      >
-                        <div className="bg-background/30 backdrop-blur-sm rounded-lg p-4 text-center">
-                          <p className="text-sm text-muted-foreground mb-1">
-                            Illumination
-                          </p>
-                          <p className="text-xl font-medium">
-                            {Math.round(moonPhaseData.illumination * 100)}%
-                          </p>
-                        </div>
-                        <div className="bg-background/30 backdrop-blur-sm rounded-lg p-4 text-center">
-                          <p className="text-sm text-muted-foreground mb-1">
-                            Lunar Age
-                          </p>
-                          <p className="text-xl font-medium">
-                            {Math.round(
-                              (moonPhaseData.phaseAngle / 360) * 29.53
-                            )}{" "}
-                            days
-                          </p>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              {isLoading ? (
-                <div className="glass-morphism rounded-xl p-6 md:p-8">
-                  <Skeleton className="h-8 w-48 mb-6" />
-                  <div className="space-y-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Skeleton key={i} className="h-24 w-full" />
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <CelestialInfo moonPhaseData={moonPhaseData} />
-              )}
-            </motion.div>
-          </div>
-
-          {!isLoading && (
-            <>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-                className="mt-8"
-              >
-                <CelestialInfluences moonPhaseData={moonPhaseData} />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-                className="mt-8"
-              >
-                <ShareSection
-                  birthDate={dateParam ? new Date(dateParam) : undefined}
-                  moonPhaseData={moonPhaseData}
-                  name={nameParam || undefined}
-                />
-              </motion.div>
-            </>
-          )}
-        </div>
-      </div>
-    </main>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="mt-8"
+          >
+            <ShareSection
+              birthDate={dateParam ? new Date(dateParam) : undefined}
+              moonPhaseData={moonPhaseData}
+              name={nameParam || undefined}
+            />
+          </motion.div>
+        </>
+      )}
+    </div>
   );
 }
