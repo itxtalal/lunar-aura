@@ -245,3 +245,25 @@ export function getMoonSign(date: Date) {
   const index = Math.floor(position);
   return signs[index >= 0 && index < 12 ? index : 0];
 }
+
+export const getMoonPhaseDescription = (phase: string) => {
+  const descriptions: { [key: string]: string } = {
+    "New Moon":
+      "Being born during a new moon phase suggests a natural affinity for new beginnings and fresh starts. You possess a pioneering spirit and the ability to initiate projects with enthusiasm. Your intuitive creativity is heightened during new cycles, making you excellent at planting seeds for future growth.",
+    "Waxing Crescent":
+      "Being born during a waxing crescent moon phase suggests you're a naturally growth-oriented person with a gift for building momentum. You excel at nurturing ideas from their earliest stages and have a persistent, determined nature that helps you overcome initial obstacles.",
+    "First Quarter":
+      "Being born during a first quarter moon phase suggests you have a natural ability to overcome obstacles and push through challenges. Your decisiveness and action-oriented nature helps you make progress when others might hesitate, making you a natural problem-solver.",
+    "Waxing Gibbous":
+      "Being born during a waxing gibbous moon phase suggests you possess a detail-oriented and perfectionistic nature. You excel at refining and improving existing structures and have strong analytical abilities that help you perfect your craft.",
+    "Full Moon":
+      "Being born during a full moon phase suggests you have heightened emotional awareness and intuitive abilities. You possess strong interpersonal skills and a natural charisma that draws others to you, making you excellent at connecting with people on a deep level.",
+    "Waning Gibbous":
+      "Being born during a waning gibbous moon phase suggests you have natural teaching abilities and a gift for communication. You excel at sharing knowledge and helping others understand complex concepts, making you a natural mentor and guide.",
+    "Last Quarter":
+      "Being born during a last quarter moon phase suggests you possess strong critical thinking skills and the ability to release what no longer serves you. You're naturally adept at transitions and letting go, helping you navigate life's changes with wisdom.",
+    "Waning Crescent":
+      "Being born during a waning crescent moon phase suggests you have a contemplative nature and deep spiritual insights. You're comfortable with endings and the quiet space before new beginnings, making you naturally wise and reflective.",
+  };
+  return descriptions[phase] || "";
+};

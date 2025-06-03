@@ -1,20 +1,6 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import {
-  Moon,
-  MoonStar,
-  Sparkles,
-  Stars,
-  Sun,
-  Sunrise,
-  Sunset,
-} from "lucide-react";
+import { MoonStar, Sun, Sunrise, Sunset } from "lucide-react";
 
 interface CelestialInfoProps {
   moonPhaseData: {

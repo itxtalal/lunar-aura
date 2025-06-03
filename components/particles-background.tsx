@@ -19,25 +19,11 @@ export function ParticlesBackground() {
     () => ({
       fpsLimit: 60,
       interactivity: {
-        events: {
-          onHover: {
-            enable: true,
-            mode: "grab",
-          },
-        },
-        modes: {
-          grab: {
-            distance: 140,
-            links: {
-              opacity: 0.5,
-            },
-          },
-        },
+        events: { onHover: { enable: true, mode: "grab" } },
+        modes: { grab: { distance: 140, links: { opacity: 0.5 } } },
       },
       particles: {
-        color: {
-          value: "#ffffff",
-        },
+        color: { value: "#ffffff" },
         links: {
           color: "#ffffff",
           distance: 150,
@@ -45,24 +31,11 @@ export function ParticlesBackground() {
           opacity: 0.1,
           width: 1,
         },
-        move: {
-          enable: true,
-          random: true,
-          speed: 0.5,
-          straight: false,
-        },
-        number: {
-          value: 40,
-        },
-        opacity: {
-          value: 0.3,
-        },
-        shape: {
-          type: "circle",
-        },
-        size: {
-          value: { min: 1, max: 3 },
-        },
+        move: { enable: true, random: true, speed: 0.5, straight: false },
+        number: { value: 40 },
+        opacity: { value: 0.3 },
+        shape: { type: "circle" },
+        size: { value: { min: 1, max: 3 } },
       },
       detectRetina: true,
     }),

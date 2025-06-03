@@ -1,41 +1,19 @@
 "use client";
 
+import { CharacteristicBadge } from "@/components/characteristic-badge";
+import { MoonPhaseDisplay } from "@/components/moon-phase-display";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { toPng } from "html-to-image";
-import { Check, Copy, Download, Facebook, Twitter } from "lucide-react";
+import { Check, Copy, Download } from "lucide-react";
 import { useRef, useState } from "react";
-import { MoonPhaseDisplay } from "@/components/moon-phase-display";
 
 interface ShareSectionProps {
   birthDate?: Date;
   moonPhaseData: any;
   name?: string;
-}
-
-interface CharacteristicBadgeProps {
-  text: string;
-  color: string;
-}
-
-function CharacteristicBadge({ text, color }: CharacteristicBadgeProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
-      className={cn(
-        "px-2 py-1 md:px-3 md:py-1.5 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm",
-        "border border-white/10 shadow-lg",
-        color
-      )}
-    >
-      {text}
-    </motion.div>
-  );
 }
 
 export function ShareSection({
@@ -49,7 +27,6 @@ export function ShareSection({
 
   if (!birthDate || !moonPhaseData) return null;
 
-  const formattedDate = format(birthDate, "MMMM d, yyyy");
   const shareUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}/result?date=${format(
@@ -73,7 +50,7 @@ export function ShareSection({
 
     try {
       const dataUrl = await toPng(cardRef.current, {
-        quality: 0.95,
+        quality: 1,
         backgroundColor: "#0f172a",
       });
 
