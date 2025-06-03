@@ -27,11 +27,17 @@ export function MoonPhaseDisplay({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Get device pixel ratio
+    const dpr = window.devicePixelRatio || 1;
+
     // Set canvas dimensions based on rendered size
     const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
     const size = Math.min(canvas.width, canvas.height);
+
+    // Scale the context to the device pixel ratio
+    ctx.scale(dpr, dpr);
 
     // Clear canvas
     ctx.clearRect(0, 0, size, size);
