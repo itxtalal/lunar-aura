@@ -34,23 +34,23 @@ export function MoonPhaseDisplay({
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
-    const size = Math.min(canvas.width, canvas.height);
 
     // Scale the context to the device pixel ratio
     ctx.scale(dpr, dpr);
 
     // Clear canvas
-    ctx.clearRect(0, 0, size, size);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Calculate moon phase
     const { phaseAngle } = moonPhaseData;
 
-    // Moon parameters - adjusted for padding and glow
-    const centerX = size / 2;
-    const centerY = size / 2;
-    const glowPadding = 10; // Adjusted this value to make the moon bigger
-    const maxGlowRadius = size / 2 - glowPadding;
-    const baseRadius = maxGlowRadius / 1.3; // Calculate base moon radius based on desired max glow radius
+    // Moon parameters - adjusted for padding and to fit within canvas
+    const centerX = canvas.width / (2 * dpr);
+    const centerY = canvas.height / (2 * dpr);
+    const buffer = 5; // Small buffer to keep drawing away from the edge
+    const maxRadius =
+      Math.min(canvas.width / (2 * dpr), canvas.height / (2 * dpr)) - buffer; // Maximum allowed radius
+    const baseRadius = maxRadius / 1.3; // Calculate base moon radius relative to max allowed radius
 
     // Draw moon base (full circle)
     ctx.beginPath();
