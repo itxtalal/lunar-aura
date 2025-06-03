@@ -26,8 +26,32 @@ interface CelestialInfluencesProps {
   };
 }
 
+// Mock data for demonstration
+const mockMoonPhaseData = {
+  date: new Date(),
+  phase: "Full Moon",
+  illumination: 100,
+  phaseAngle: 180,
+  phaseDescription: "The moon is fully illuminated",
+  moonrise: "6:30 PM",
+  moonset: "6:45 AM",
+  zodiacSign: {
+    sign: "Leo",
+    symbol: "♌",
+    element: "Fire",
+    description:
+      "Leos are natural leaders with a warm, generous heart and magnetic personality. They possess strong creative abilities and love to be in the spotlight, inspiring others with their confidence and enthusiasm.",
+  },
+  moonSign: {
+    sign: "Pisces",
+    element: "Water",
+    description:
+      "With the moon in Pisces, you have deep emotional intuition and a rich inner world. You're naturally empathetic, artistic, and drawn to spiritual or mystical experiences that connect you to something greater.",
+  },
+};
+
 export function CelestialInfluences({
-  moonPhaseData,
+  moonPhaseData = mockMoonPhaseData,
 }: CelestialInfluencesProps) {
   const [activeView, setActiveView] = useState("phase");
   const [selectedChip, setSelectedChip] = useState<{
@@ -44,6 +68,7 @@ export function CelestialInfluences({
     {
       id: "phase",
       label: "Moon Phase",
+      shortLabel: "Phase",
       icon: Moon,
       color: "from-purple-600 to-indigo-700",
       accentColor: "text-purple-300",
@@ -51,6 +76,7 @@ export function CelestialInfluences({
     {
       id: "zodiac",
       label: "Sun Sign",
+      shortLabel: "Sun",
       icon: Sun,
       color: "from-orange-600 to-red-700",
       accentColor: "text-orange-300",
@@ -58,6 +84,7 @@ export function CelestialInfluences({
     {
       id: "moon",
       label: "Moon Sign",
+      shortLabel: "Moon",
       icon: Stars,
       color: "from-blue-600 to-cyan-700",
       accentColor: "text-blue-300",
@@ -101,18 +128,20 @@ export function CelestialInfluences({
             transition={{ duration: 0.4 }}
             className="space-y-6"
           >
-            <div className="text-center mb-8">
+            <div className="text-center mb-6 md:mb-8">
               <div
-                className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br ${currentView?.color} rounded-full mb-4`}
+                className={`inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br ${currentView?.color} rounded-full mb-4`}
               >
-                <Moon className="w-10 h-10 text-white" />
+                <Moon className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-2">{phase}</h3>
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                {phase}
+              </h3>
               <p className={accentColorClass}>Your Birth Moon Phase</p>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-              <p className="text-lg leading-relaxed text-white/90">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-6 border border-white/20">
+              <p className="text-base md:text-lg leading-relaxed text-white/90">
                 {getPhaseDescription(phase)}
               </p>
             </div>
@@ -129,13 +158,15 @@ export function CelestialInfluences({
             transition={{ duration: 0.4 }}
             className="space-y-6"
           >
-            <div className="text-center mb-8">
+            <div className="text-center mb-6 md:mb-8">
               <div
-                className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br ${currentView?.color} rounded-full mb-4`}
+                className={`inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br ${currentView?.color} rounded-full mb-4`}
               >
-                <span className="text-3xl text-white">{zodiacSign.symbol}</span>
+                <span className="text-2xl md:text-3xl text-white">
+                  {zodiacSign.symbol}
+                </span>
               </div>
-              <h3 className="text-3xl font-bold text-white mb-2">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                 {zodiacSign.sign}
               </h3>
               <p className={accentColorClass}>
@@ -143,8 +174,8 @@ export function CelestialInfluences({
               </p>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-              <p className="text-lg leading-relaxed text-white/90 mb-4">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-6 border border-white/20">
+              <p className="text-base md:text-lg leading-relaxed text-white/90 mb-4">
                 {zodiacSign.description}
               </p>
             </div>
@@ -161,13 +192,13 @@ export function CelestialInfluences({
             transition={{ duration: 0.4 }}
             className="space-y-6"
           >
-            <div className="text-center mb-8">
+            <div className="text-center mb-6 md:mb-8">
               <div
-                className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br ${currentView?.color} rounded-full mb-4`}
+                className={`inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br ${currentView?.color} rounded-full mb-4`}
               >
-                <Stars className="w-10 h-10 text-white" />
+                <Stars className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-2">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                 {moonSign.sign}
               </h3>
               <p className={accentColorClass}>
@@ -175,23 +206,23 @@ export function CelestialInfluences({
               </p>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-              <p className="text-lg leading-relaxed text-white/90 mb-4">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-6 border border-white/20">
+              <p className="text-base md:text-lg leading-relaxed text-white/90 mb-4">
                 {moonSign.description}
               </p>
             </div>
           </motion.div>
         );
       default:
-        return null; // Should not happen with defined views
+        return null;
     }
   };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 overflow-hidden flex items-center justify-center">
-      {/* Animated background elements (simplified for clarity, original might be more complex) */}
+      {/* Animated background elements */}
       <div className="absolute inset-0 z-0">
-        {[...Array(50)].map((_, i) => (
+        {[...Array(30)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-white rounded-full opacity-70"
@@ -212,30 +243,31 @@ export function CelestialInfluences({
         ))}
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-12 max-w-6xl">
+      <div className="relative z-10 container mx-auto px-4 py-8 md:py-12 max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-4">
             Celestial Influences
           </h1>
-          <p className="text-xl text-white/70">
+          <p className="text-lg md:text-xl text-white/70">
             Discover how the cosmos shaped your arrival
           </p>
         </motion.div>
 
-        {/* Navigation */}
+        {/* Mobile-First Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="flex justify-center mb-12"
+          className="flex justify-center mb-8 md:mb-12"
         >
-          <div className="bg-white/10 backdrop-blur-md rounded-full p-2 border border-white/20">
-            <div className="flex space-x-1">
+          {/* Mobile Navigation - Stacked vertically on very small screens */}
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl md:rounded-full p-2 border border-white/20 w-full max-w-sm md:max-w-none md:w-auto">
+            <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1">
               {views.map((view) => {
                 const Icon = view.icon;
                 return (
@@ -243,18 +275,23 @@ export function CelestialInfluences({
                     key={view.id}
                     onClick={() => setActiveView(view.id)}
                     className={cn(
-                      "relative px-6 py-3 rounded-full transition-all duration-300 flex items-center space-x-2",
+                      "relative px-4 py-3 md:px-6 rounded-xl md:rounded-full transition-all duration-300 flex items-center justify-center sm:justify-start space-x-2 text-sm md:text-base",
                       activeView === view.id
-                        ? "bg-primary-foreground text-primary shadow-lg"
+                        ? "bg-white text-slate-900 shadow-lg font-medium"
                         : "text-white hover:bg-white/20"
                     )}
                   >
-                    <Icon className="w-5 h-5" />
-                    <span className="font-medium">{view.label}</span>
+                    <Icon className="w-4 h-4 md:w-5 md:h-5" />
+                    <span className="font-medium hidden sm:inline">
+                      {view.label}
+                    </span>
+                    <span className="font-medium sm:hidden">
+                      {view.shortLabel}
+                    </span>
                     {activeView === view.id && (
                       <motion.div
                         layoutId="activeIndicator"
-                        className="absolute inset-0 bg-primary-foreground rounded-full -z-10"
+                        className="absolute inset-0 bg-white rounded-xl md:rounded-full -z-10"
                         transition={{
                           type: "spring",
                           bounce: 0.2,

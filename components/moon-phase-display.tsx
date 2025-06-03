@@ -11,9 +11,13 @@ interface MoonPhaseDisplayProps {
     phaseDescription: string;
     date: Date;
   };
+  canvasStyles?: string;
 }
 
-export function MoonPhaseDisplay({ moonPhaseData }: MoonPhaseDisplayProps) {
+export function MoonPhaseDisplay({
+  moonPhaseData,
+  canvasStyles = "w-40 h-40 sm:w-48 sm:h-48 md:w-60 md:h-60 lg:w-80 lg:h-80", // Default responsive sizes
+}: MoonPhaseDisplayProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -154,7 +158,7 @@ export function MoonPhaseDisplay({ moonPhaseData }: MoonPhaseDisplayProps) {
       transition={{ duration: 0.6, delay: 0.2 }}
       className="moon-glow mb-6 flex justify-center items-center"
     >
-      <canvas ref={canvasRef} className="w-[240px] h-[240px]" />
+      <canvas ref={canvasRef} className={canvasStyles} />
     </motion.div>
   );
 }

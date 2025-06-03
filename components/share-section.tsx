@@ -28,7 +28,7 @@ function CharacteristicBadge({ text, color }: CharacteristicBadgeProps) {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        "px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm",
+        "px-2 py-1 md:px-3 md:py-1.5 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm",
         "border border-white/10 shadow-lg",
         color
       )}
@@ -109,10 +109,9 @@ export function ShareSection({
           ? "bg-emerald-900/40 text-emerald-200 border-emerald-700"
           : moonPhaseData.zodiacSign.element.toLowerCase() === "air"
           ? "bg-sky-900/40 text-sky-200 border-sky-700"
-          : "bg-indigo-900/40 text-indigo-200 border-indigo-700", // Water
+          : "bg-indigo-900/40 text-indigo-200 border-indigo-700",
     });
 
-    // Add moon phase characteristic
     const phaseTraits = {
       "New Moon": [
         {
@@ -233,7 +232,6 @@ export function ShareSection({
       ...phaseTraits[moonPhaseData.phase as keyof typeof phaseTraits]
     );
 
-    // Add zodiac sign specific traits
     const zodiacTraits = {
       Aries: [
         {
@@ -371,120 +369,134 @@ export function ShareSection({
           ? "bg-emerald-900/40 text-emerald-200 border-emerald-700"
           : moonPhaseData.moonSign.element.toLowerCase() === "air"
           ? "bg-sky-900/40 text-sky-200 border-sky-700"
-          : "bg-indigo-900/40 text-indigo-200 border-indigo-700", // Water
+          : "bg-indigo-900/40 text-indigo-200 border-indigo-700",
     });
 
     return characteristics;
   };
 
   return (
-    <div className="glass-morphism rounded-xl p-6 md:p-8 relative overflow-hidden">
+    <div className="glass-morphism rounded-xl p-4 md:p-6 lg:p-8 relative overflow-hidden border border-white/10">
+      {/* Background gradient */}
       <div className="absolute inset-0 aurora-gradient opacity-20"></div>
-      <div className="relative z-10">
-        <h2 className="text-2xl font-bold mb-6">Share Your Lunar Card</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="relative z-10">
+        <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-white text-center md:text-left">
+          Share Your Lunar Card
+        </h2>
+
+        {/* Mobile-first layout */}
+        <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-8">
+          {/* Lunar Card */}
           <div
             ref={cardRef}
-            className="glass-morphism rounded-xl p-8 aspect-[4/5] flex flex-col justify-between relative overflow-hidden"
+            className="glass-morphism rounded-xl p-4 md:p-6 lg:p-8 relative overflow-hidden border border-white/20 mx-auto max-w-sm lg:max-w-none"
           >
+            {/* Card background */}
             <div className="absolute inset-0 aurora-gradient opacity-30"></div>
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="text-center mb-8">
-                <h3 className="text-lg font-semibold text-primary">
+
+            <div className="relative z-10 flex flex-col h-full min-h-[500px] md:min-h-[600px]">
+              {/* Header */}
+              <div className="text-center mb-6 md:mb-8">
+                <h3 className="text-base md:text-lg font-semibold text-purple-300">
                   LunarAura
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs md:text-sm text-white/60">
                   Birth Moon Reading
                 </p>
               </div>
 
+              {/* Name */}
               {name && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="text-center mb-6"
+                  className="text-center mb-4 md:mb-6"
                 >
-                  <h4 className="text-3xl font-bold text-primary/90 tracking-wide">
+                  <h4 className="text-xl md:text-2xl lg:text-3xl font-bold text-white tracking-wide">
                     {name}
                   </h4>
                 </motion.div>
               )}
 
-              <div className="flex flex-col items-center justify-center flex-grow mb-6">
-                {/* Moon Phase Icon/Symbol */}
-                <div className="w-32 h-32 rounded-full bg-background/50 backdrop-blur-sm flex items-center justify-center mb-6 border border-white/10 shadow-inner">
+              {/* Moon Phase Display */}
+              <div className="flex flex-col items-center justify-center flex-grow mb-4 md:mb-6">
+                <div className="w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center my-7 md:my-12 border border-white/10 shadow-inner">
                   <MoonPhaseDisplay moonPhaseData={moonPhaseData} />
                 </div>
-                <h3 className="text-3xl font-bold text-white mt-6 mb-2">
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2 text-center">
                   {moonPhaseData.phase}
                 </h3>
-                <p className="text-muted-foreground text-base">
+                <p className="text-white/60 text-sm md:text-base text-center">
                   {Math.round(moonPhaseData.illumination * 100)}% Illumination
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 text-center mb-8">
+              {/* Info Grid */}
+              <div className="grid grid-cols-3 gap-2 md:gap-4 text-center mb-4 md:mb-6">
                 <div>
-                  <p className="text-xs text-muted-foreground">Sun Sign</p>
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-xs text-white/50">Sun Sign</p>
+                  <p className="text-xs md:text-sm font-medium text-white">
                     {moonPhaseData.zodiacSign.sign}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Moon Sign</p>
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-xs text-white/50">Moon Sign</p>
+                  <p className="text-xs md:text-sm font-medium text-white">
                     {moonPhaseData.moonSign.sign}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Birth Date</p>
-                  <p className="text-sm font-medium text-white">
-                    {formattedDate}
+                  <p className="text-xs text-white/50">Birth Date</p>
+                  <p className="text-xs md:text-sm font-medium text-white">
+                    {birthDate.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </p>
                 </div>
               </div>
 
-              {/* Characteristics Section */}
-              <div className="mt-auto pt-6 border-t border-white/10">
-                <h4 className="text-sm font-semibold mb-3 text-white/80">
+              {/* Characteristics */}
+              <div className="mt-auto pt-4 md:pt-6 border-t border-white/10">
+                <h4 className="text-xs md:text-sm font-semibold mb-2 md:mb-3 text-white/80 text-center">
                   Characteristics
                 </h4>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {getCharacteristics().map((char, index) => (
-                    <CharacteristicBadge
-                      key={index}
-                      text={char.text}
-                      color={char.color}
-                    />
-                  ))}
+                <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
+                  {getCharacteristics()
+                    .slice(0, 6)
+                    .map((char, index) => (
+                      <CharacteristicBadge
+                        key={index}
+                        text={char.text}
+                        color={char.color}
+                      />
+                    ))}
                 </div>
               </div>
-            </div>
 
-            <div className="mt-4 text-center">
-              <p className="text-xs text-muted-foreground">
-                Generated by LunarAura
-              </p>
+              {/* Footer */}
+              <div className="mt-4 text-center">
+                <p className="text-xs text-white/40">Generated by LunarAura</p>
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col justify-center space-y-4">
-            <div>
-              <h3 className="text-xl font-semibold mb-2">
+          {/* Share Options */}
+          <div className="flex flex-col justify-center space-y-4 md:space-y-6">
+            <div className="text-center lg:text-left">
+              <h3 className="text-lg md:text-xl font-semibold mb-2 text-white">
                 Share Your Lunar Profile
               </h3>
-              <p className="text-lg text-muted-foreground mb-4">
+              <p className="text-sm md:text-base lg:text-lg text-white/70 mb-4 md:mb-6">
                 Download your personalized lunar card or share it with friends.
               </p>
             </div>
 
-            <div className="space-y-3 text-lg">
-              <Button
-                onClick={handleDownload}
-                className="w-full bg-primary hover:bg-primary/90"
-              >
+            <div className="space-y-3 max-w-sm mx-auto lg:max-w-none lg:mx-0">
+              <Button onClick={handleDownload} className="w-full">
                 <Download className="mr-2 h-4 w-4" />
                 Download Image
               </Button>
@@ -507,6 +519,9 @@ export function ShareSection({
                 )}
               </Button>
             </div>
+
+            {/* Additional mobile spacing */}
+            <div className="h-4 lg:hidden"></div>
           </div>
         </div>
       </div>

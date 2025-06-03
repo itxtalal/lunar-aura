@@ -130,7 +130,10 @@ export default function ResultPage() {
                   <div className="absolute inset-0 aurora-gradient opacity-20"></div>
                   <div className="relative z-10">
                     <div className="flex flex-col items-center">
-                      <MoonPhaseDisplay moonPhaseData={moonPhaseData} />
+                      <MoonPhaseDisplay
+                        moonPhaseData={moonPhaseData}
+                        canvasStyles="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80"
+                      />
 
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
