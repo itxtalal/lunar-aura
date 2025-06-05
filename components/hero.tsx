@@ -21,7 +21,11 @@ export function Hero() {
 
   const handleSubmit = () => {
     if (selectedDate && name.trim()) {
-      const dateString = selectedDate.toISOString().split("T")[0];
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+      const day = String(selectedDate.getDate()).padStart(2, "0");
+      const dateString = `${year}-${month}-${day}`;
+
       const queryParams = new URLSearchParams({ date: dateString });
       queryParams.append("name", name.trim());
       router.push(`/result?${queryParams.toString()}`);
