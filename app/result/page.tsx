@@ -41,7 +41,9 @@ export default function ResultPage() {
         // Simulate API call delay
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
-        const birthDate = new Date(dateParam);
+        // Parse the date string and create a local date
+        const [year, month, day] = dateParam.split("-").map(Number);
+        const birthDate = new Date(year, month - 1, day); // month is 0-based in JS Date
 
         // Calculate moon phase and other celestial data
         const moonPhase = getMoonPhase(birthDate);
@@ -70,7 +72,11 @@ export default function ResultPage() {
   }, [dateParam, router]);
 
   const formattedDate = dateParam
-    ? format(new Date(dateParam), "MMMM d, yyyy")
+    ? (() => {
+        const [year, month, day] = dateParam.split("-").map(Number);
+        const date = new Date(year, month - 1, day);
+        return format(date, "MMMM d, yyyy");
+      })()
     : "";
 
   // Calculate share URL

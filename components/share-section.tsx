@@ -28,12 +28,17 @@ export function ShareSection({
 
   if (!birthDate || !moonPhaseData) return null;
 
+  // Format the date string manually to avoid timezone issues
+  const year = birthDate.getFullYear();
+  const month = String(birthDate.getMonth() + 1).padStart(2, "0");
+  const day = String(birthDate.getDate()).padStart(2, "0");
+  const dateString = `${year}-${month}-${day}`;
+
   const shareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/result?date=${format(
-          birthDate,
-          "yyyy-MM-dd"
-        )}${name ? `&name=${encodeURIComponent(name)}` : ""}`
+      ? `${window.location.origin}/result?date=${dateString}${
+          name ? `&name=${encodeURIComponent(name)}` : ""
+        }`
       : "";
 
   const handleCopyLink = () => {
@@ -56,7 +61,7 @@ export function ShareSection({
       });
 
       const link = document.createElement("a");
-      link.download = `lunar-aura-${format(birthDate, "yyyy-MM-dd")}.png`;
+      link.download = `lunar-aura-${dateString}.png`;
       link.href = dataUrl;
       link.click();
 
@@ -432,6 +437,7 @@ export function ShareSection({
                       month: "short",
                       day: "numeric",
                       year: "numeric",
+                      timeZone: "UTC", // Force UTC to prevent timezone shifts
                     })}
                   </p>
                 </div>

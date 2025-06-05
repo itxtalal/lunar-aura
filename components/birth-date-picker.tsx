@@ -47,12 +47,14 @@ export function BirthDatePicker({
 
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
-      // Create a new date with UTC midnight to avoid timezone issues
-      const utcDate = new Date(
-        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+      // Create a new date preserving the local date without UTC conversion
+      const localDate = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
       );
-      setSelectedDate(utcDate);
-      onDateSelected(utcDate);
+      setSelectedDate(localDate);
+      onDateSelected(localDate);
     }
   };
 
